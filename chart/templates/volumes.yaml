@@ -1,0 +1,33 @@
+{{- range $volumeIndex, $volume := .Values.volumes }}
+{{- $isTemplate := false }}
+{{- range $componentIndex, $component := $.Values.components }}
+  {{- range $containerIndex, $container := $component.containers }}
+    {{- range $volumeMountIndex, $volumeMount := $container.volumeMounts }}
+      {{- if $volumeMount.volume.readOnly }}
+      {{- else }}
+        {{- if eq $volume.name $volumeMount.volume.name }}
+          {{- $isTemplate = true }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- if eq $isTemplate false }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $volume.name | quote }}
+  labels:
+    "app.kubernetes.io/name": {{ $.Release.Name | quote }}
+    "app.kubernetes.io/managed-by": {{ $.Release.Service | quote }}
+  annotations:
+    "helm.sh/chart": "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $volume.size | quote }}
+---
+{{- end }}
+{{- end }}
