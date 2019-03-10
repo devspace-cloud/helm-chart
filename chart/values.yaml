@@ -23,7 +23,7 @@ components:
     ports:
     - externalPort: 80
       # This is the container port that should be exposed through this service
-      containerPort: 3000
+      containerPort: 32127
 
 # Define persistent volumes here
 # Then mount them in containers above
