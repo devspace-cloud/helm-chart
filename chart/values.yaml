@@ -14,7 +14,7 @@ components:
         ephemeralStorage: "1Gi"
     # Environment variables
     env: []
-    # Mount volumes in this container
+    # Mount persistent volumes in this container
     volumeMounts: []
   # Expose your component via service
   # URLs will be connected if name=external and externalPort=80
