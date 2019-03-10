@@ -3,8 +3,9 @@
 components:
 - name: default
   containers:
-  - # Image tag will be automatically updated in runtime
-    # when running devspace deploy or devspace dev
+  - # Image tag will be automatically updated in runtime when running devspace deploy or devspace dev
+    # The name used here has to match the name in .devspace/config.yaml under images.default.image, 
+    # otherwise devspace is not able to replace it!
     image: yourusername/devspace
     resources:
       limits:
