@@ -5,7 +5,7 @@ components:
   containers:
   - # Image tag will be automatically updated in runtime
     # when running devspace deploy or devspace dev
-    image: #image#
+    image: yourusername/devspace
     resources:
       limits:
         cpu: "400m"
@@ -23,7 +23,7 @@ components:
     ports:
     - externalPort: 80
       # This is the container port that should be exposed through this service
-      containerPort: #port#
+      containerPort: 3000
 
 # Define persistent volumes here
 # Then mount them in containers above
