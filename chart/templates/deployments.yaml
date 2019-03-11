@@ -35,6 +35,8 @@ spec:
     {{- else }}
     type: Recreate
     {{- end }}
+    {{- else }}
+    type: Recreate
     {{- end }}
   {{- end }}
   {{- if eq $kind "StatefulSet" }}
