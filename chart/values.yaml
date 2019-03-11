@@ -1,3 +1,7 @@
+#### DevSpace Helm Chart ####
+# This is a highly configurable Helm chart. For information on how to configure this file,
+# take a look at the documentation: http://devspace.cloud/docs/chart/basics/devspace-helm-chart
+
 # Components are independently scalable parts of your application
 # Components can contain multiple containers which cannot be scaled independently from each other
 components:
