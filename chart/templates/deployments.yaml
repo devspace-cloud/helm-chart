@@ -131,7 +131,7 @@ spec:
         {{- $isVolumeOfThisComponent := false }}
         {{- range $containerIndex, $container := $component.containers }}
           {{- range $volumeMountIndex, $volumeMount := $container.volumeMounts }}
-            {{- if $volumeMount.volume.readOnly }}
+            {{- if or $volumeMount.volume.readOnly $volume.secret $volume.configMap }}
               {{- if eq $volume.name $volumeMount.volume.name }}
                 {{- $isVolumeOfThisComponent = true }}
               {{- end }}
@@ -140,12 +140,24 @@ spec:
         {{- end }}
         {{- if $isVolumeOfThisComponent }}
         - name: {{ $volume.name | quote }}
+          {{- if $volume.secret }}
+          secret:
+{{ toYaml $volume.secret | indent 12 }}
+          {{- else }}
+          {{- if $volume.configMap }}
+          configMap:
+{{ toYaml $volume.configMap | indent 12 }}
+          {{- else }}
           persistentVolumeClaim:
             claimName: {{ $volume.name | quote }}
+          {{- end }}
+          {{- end }}
         {{- end }}
         {{- end }}
   volumeClaimTemplates:
     {{- range $volumeIndex, $volume := $.Values.volumes }}
+    {{- if or $volume.secret $volume.configMap }}
+    {{- else }}
     {{- $isVolumeTemplateOfThisComponent := false }}
     {{- range $containerIndex, $container := $component.containers }}
       {{- range $volumeMountIndex, $volumeMount := $container.volumeMounts }}
@@ -166,6 +178,7 @@ spec:
       resources:
         requests:
           storage: {{ $volume.size | quote }}
+    {{- end }}
     {{- end }}
     {{- end }}
 ---
@@ -197,5 +210,4 @@ spec:
     "app.kubernetes.io/managed-by": {{ $.Release.Service | quote }}
 ---
 {{- end }}
-
 {{- end }}

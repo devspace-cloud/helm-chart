@@ -1,18 +1,19 @@
 {{- range $volumeIndex, $volume := .Values.volumes }}
-{{- $isTemplate := false }}
+{{- if or $volume.secret $volume.configMap }}
+{{- else }}
+{{- $createVolume := false }}
 {{- range $componentIndex, $component := $.Values.components }}
   {{- range $containerIndex, $container := $component.containers }}
     {{- range $volumeMountIndex, $volumeMount := $container.volumeMounts }}
       {{- if $volumeMount.volume.readOnly }}
-      {{- else }}
         {{- if eq $volume.name $volumeMount.volume.name }}
-          {{- $isTemplate = true }}
+          {{- $createVolume = true }}
         {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}
-{{- if eq $isTemplate false }}
+{{- if $createVolume }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -29,5 +30,6 @@ spec:
     requests:
       storage: {{ $volume.size | quote }}
 ---
+{{- end }}
 {{- end }}
 {{- end }}
